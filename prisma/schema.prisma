@@ -13,12 +13,16 @@ datasource db {
 // TODO モデル（テーブル名は todos）
 model Todo {
   // 主キー：DB側で UUID を自動生成する（Supabase クライアントから追加した場合も有効）
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   // ログインしたユーザーのID（auth.users.id）
-  userId      String   @map("user_id") @db.Uuid
+  userId      String    @map("user_id") @db.Uuid
   title       String
-  isCompleted Boolean  @default(false) @map("is_completed")
-  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  isCompleted Boolean   @default(false) @map("is_completed")
+  // 期限（日付のみ・未設定可）
+  dueDate     DateTime? @map("due_date") @db.Date
+  // 完了した日時（未完了は null）
+  completedAt DateTime? @map("completed_at") @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("todos")
 }
