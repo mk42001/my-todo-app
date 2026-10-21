@@ -23,6 +23,17 @@ async function readError(res: Response): Promise<string> {
   return data?.error ?? "エラーが発生しました";
 }
 
+// 完了日時をブラウザのローカル時間で「2026/10/21 16:30」の形式にする
+function formatCompletedAt(iso: string): string {
+  return new Date(iso).toLocaleString("ja-JP", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
 // 入力欄の共通スタイル（ライト / ダーク両対応）
 const inputClass =
   "rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder-zinc-400 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50 dark:placeholder-zinc-500";
@@ -231,13 +242,21 @@ export default function HomePage() {
                         )}
                       </div>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(todo.id)}
-                      className="shrink-0 rounded-lg px-2.5 py-1 text-sm text-zinc-500 transition hover:bg-red-50 hover:text-red-600 dark:text-zinc-400 dark:hover:bg-red-950/50 dark:hover:text-red-300"
-                    >
-                      削除
-                    </button>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(todo.id)}
+                        className="rounded-lg px-2.5 py-1 text-sm text-zinc-500 transition hover:bg-red-50 hover:text-red-600 dark:text-zinc-400 dark:hover:bg-red-950/50 dark:hover:text-red-300"
+                      >
+                        削除
+                      </button>
+                      {todo.isCompleted && todo.completedAt && (
+                        <span className="text-right text-xs text-zinc-500 dark:text-zinc-400">
+                          <span className="block sm:inline">完了 </span>
+                          {formatCompletedAt(todo.completedAt)}
+                        </span>
+                      )}
+                    </div>
                   </li>
                 );
               })}

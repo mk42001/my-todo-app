@@ -20,6 +20,8 @@ model Todo {
   isCompleted Boolean   @default(false) @map("is_completed")
   // 期限（日付のみ・未設定可）
   dueDate     DateTime? @map("due_date") @db.Date
+  // 完了した日時（未完了は null）
+  completedAt DateTime? @map("completed_at") @db.Timestamptz(6)
   createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("todos")

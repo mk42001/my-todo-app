@@ -35,7 +35,11 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/todos/[id]
   const body = (await request.json().catch(() => null)) as Partial<UpdateTodoRequest> | null;
 
   // 更新する項目を組み立てる
-  const data: { isCompleted?: boolean; dueDate?: Date | null } = {};
+  const data: {
+    isCompleted?: boolean;
+    completedAt?: Date | null;
+    dueDate?: Date | null;
+  } = {};
 
   if (body?.isCompleted !== undefined) {
     if (typeof body.isCompleted !== "boolean") {
@@ -45,6 +49,8 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/todos/[id]
       );
     }
     data.isCompleted = body.isCompleted;
+    // 完了にした日時を記録し、未完了に戻したら消す
+    data.completedAt = body.isCompleted ? new Date() : null;
   }
 
   if (body?.dueDate !== undefined) {
@@ -95,6 +101,7 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/todos/[id]
       title: todo.title,
       isCompleted: todo.isCompleted,
       dueDate: formatDueDate(todo.dueDate),
+      completedAt: todo.completedAt?.toISOString() ?? null,
       createdAt: todo.createdAt.toISOString(),
     },
   });

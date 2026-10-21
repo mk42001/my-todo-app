@@ -11,6 +11,8 @@ export type TodoItem = {
   isCompleted: boolean;
   // 期限（YYYY-MM-DD）。未設定は null
   dueDate: string | null;
+  // 完了した日時（ISO 8601）。未完了は null
+  completedAt: string | null;
   createdAt: string;
 };
 export type ErrorResponse = { error: string };
@@ -41,6 +43,7 @@ export async function GET() {
       title: t.title,
       isCompleted: t.isCompleted,
       dueDate: formatDueDate(t.dueDate),
+      completedAt: t.completedAt?.toISOString() ?? null,
       createdAt: t.createdAt.toISOString(),
     })),
   });
@@ -96,6 +99,7 @@ export async function POST(request: Request) {
         title: todo.title,
         isCompleted: todo.isCompleted,
         dueDate: formatDueDate(todo.dueDate),
+        completedAt: todo.completedAt?.toISOString() ?? null,
         createdAt: todo.createdAt.toISOString(),
       },
     },
