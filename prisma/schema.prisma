@@ -1,0 +1,24 @@
+// Prisma スキーマ定義
+// 接続URLは prisma.config.ts で設定する（Prisma 7 の仕様）
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// TODO モデル（テーブル名は todos）
+model Todo {
+  // 主キー：DB側で UUID を自動生成する（Supabase クライアントから追加した場合も有効）
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  // ログインしたユーザーのID（auth.users.id）
+  userId      String   @map("user_id") @db.Uuid
+  title       String
+  isCompleted Boolean  @default(false) @map("is_completed")
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@map("todos")
+}
