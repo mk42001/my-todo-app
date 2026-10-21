@@ -46,12 +46,12 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="flex flex-1 items-center justify-center bg-zinc-950 px-4 py-12">
-      <div className="w-full max-w-sm rounded-2xl border border-zinc-800 bg-zinc-900 p-8 shadow-xl">
-        <h1 className="text-center text-2xl font-semibold text-zinc-50">
+    <main className="flex flex-1 items-center justify-center bg-zinc-50 px-4 dark:bg-zinc-950 py-12">
+      <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white p-8 shadow-xl dark:border-zinc-800 dark:bg-zinc-900">
+        <h1 className="text-center text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
           新規登録
         </h1>
-        <p className="mt-2 text-center text-sm text-zinc-400">
+        <p className="mt-2 text-center text-sm text-zinc-500 dark:text-zinc-400">
           メールアドレスとパスワードでアカウントを作成します
         </p>
 
@@ -59,7 +59,7 @@ export default function SignupPage() {
           <div>
             <label
               htmlFor="email"
-              className="mb-1.5 block text-sm font-medium text-zinc-300"
+              className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               メールアドレス
             </label>
@@ -71,14 +71,14 @@ export default function SignupPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-50 placeholder-zinc-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 placeholder-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50 dark:placeholder-zinc-500 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="mb-1.5 block text-sm font-medium text-zinc-300"
+              className="mb-1.5 block text-sm font-medium text-zinc-700 dark:text-zinc-300"
             >
               パスワード
             </label>
@@ -90,7 +90,7 @@ export default function SignupPage() {
               autoComplete="new-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-50 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
+              className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-50 transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30"
             />
             <p className="mt-1.5 text-xs text-zinc-500">6文字以上で入力してください</p>
           </div>
@@ -98,7 +98,7 @@ export default function SignupPage() {
           {error && (
             <p
               role="alert"
-              className="rounded-lg border border-red-900/60 bg-red-950/50 px-3 py-2 text-sm text-red-300"
+              className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/50 dark:text-red-300"
             >
               {error}
             </p>
@@ -107,7 +107,7 @@ export default function SignupPage() {
           {message && (
             <p
               role="status"
-              className="rounded-lg border border-emerald-900/60 bg-emerald-950/50 px-3 py-2 text-sm text-emerald-300"
+              className="rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-900/60 dark:bg-emerald-950/50 dark:text-emerald-300"
             >
               {message}
             </p>
@@ -122,11 +122,11 @@ export default function SignupPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-zinc-400">
+        <p className="mt-6 text-center text-sm text-zinc-500 dark:text-zinc-400">
           すでにアカウントをお持ちの方は{" "}
           <Link
             href="/login"
-            className="font-medium text-indigo-400 hover:text-indigo-300"
+            className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
           >
             ログイン
           </Link>

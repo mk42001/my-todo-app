@@ -1,11 +1,16 @@
-// TODO の完了切り替え（PATCH）と削除（DELETE）
+// TODO の更新（PATCH：完了切り替え・期限変更）と削除（DELETE）
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
+import { formatDueDate, parseDueDate } from "@/lib/due-date";
 import { prisma } from "@/lib/prisma";
 import type { ErrorResponse, TodoItem } from "../route";
 
 // ---- リクエスト / レスポンスの型（画面側から import type で使う） ----
-export type UpdateTodoRequest = { isCompleted: boolean };
+// 渡した項目だけ更新する。dueDate に null（または空文字）を渡すと期限を消す
+export type UpdateTodoRequest = {
+  isCompleted?: boolean;
+  dueDate?: string | null;
+};
 export type UpdateTodoResponse = { todo: TodoItem };
 export type DeleteTodoResponse = { success: true };
 
@@ -28,9 +33,38 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/todos/[id]
   }
 
   const body = (await request.json().catch(() => null)) as Partial<UpdateTodoRequest> | null;
-  if (typeof body?.isCompleted !== "boolean") {
+
+  // 更新する項目を組み立てる
+  const data: { isCompleted?: boolean; dueDate?: Date | null } = {};
+
+  if (body?.isCompleted !== undefined) {
+    if (typeof body.isCompleted !== "boolean") {
+      return NextResponse.json<ErrorResponse>(
+        { error: "isCompleted は真偽値で指定してください" },
+        { status: 400 },
+      );
+    }
+    data.isCompleted = body.isCompleted;
+  }
+
+  if (body?.dueDate !== undefined) {
+    if (body.dueDate === null || body.dueDate === "") {
+      data.dueDate = null;
+    } else {
+      const parsed = typeof body.dueDate === "string" ? parseDueDate(body.dueDate) : undefined;
+      if (!parsed) {
+        return NextResponse.json<ErrorResponse>(
+          { error: "期限の日付が正しくありません" },
+          { status: 400 },
+        );
+      }
+      data.dueDate = parsed;
+    }
+  }
+
+  if (Object.keys(data).length === 0) {
     return NextResponse.json<ErrorResponse>(
-      { error: "isCompleted は真偽値で指定してください" },
+      { error: "更新する項目を指定してください" },
       { status: 400 },
     );
   }
@@ -38,7 +72,7 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/todos/[id]
   // id と user_id の両方で絞り込む（他人の TODO は更新できない）
   const { count } = await prisma.todo.updateMany({
     where: { id, userId: user.id },
-    data: { isCompleted: body.isCompleted },
+    data,
   });
   if (count === 0) {
     return NextResponse.json<ErrorResponse>(
@@ -60,6 +94,7 @@ export async function PATCH(request: Request, ctx: RouteContext<"/api/todos/[id]
       id: todo.id,
       title: todo.title,
       isCompleted: todo.isCompleted,
+      dueDate: formatDueDate(todo.dueDate),
       createdAt: todo.createdAt.toISOString(),
     },
   });
