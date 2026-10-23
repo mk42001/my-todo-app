@@ -195,7 +195,7 @@ export default function HomePage() {
             </p>
           ) : (
             <ul className="mt-5 divide-y divide-zinc-200 dark:divide-zinc-800">
-              {todos.map((todo) => {
+              {[].map((todo) => {
                 const overdue = isOverdue(todo.dueDate, todo.isCompleted);
                 return (
                   <li key={todo.id} className="flex items-start gap-3 py-3">
